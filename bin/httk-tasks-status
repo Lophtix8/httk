@@ -8,7 +8,8 @@ export HTTK_DIR="$HTTK_BIN_PATH/.."
 echo "==== httk-tasks-status"
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 computer"
+    echo "Usage: $0 computer[:queue] [--all]"
+    echo "  Inside a project only its tasks are counted; --all counts every project's."
     exit 1
 fi
 
@@ -23,6 +24,12 @@ fi
 
 shift 1
 
+# Only this project's tasks, unless --all or outside a project
+PROJECT="$HTTK_PROJECT_NAME"
+if [ "$1" == "--all" ]; then
+    PROJECT=""
+    shift 1
+fi
 
 if [ -d "$PIPEPATH1" ]; then
     PIPEPATH=$PIPEPATH1
@@ -34,4 +41,4 @@ else
     exit 1
 fi
 
-"$PIPEPATH/command" "$QUEUE" "../../httk/Execution/status.sh"
+"$PIPEPATH/command" "$QUEUE" "../../httk/Execution/status.sh \"$PROJECT\""
